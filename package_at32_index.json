@@ -1,0 +1,98 @@
+{
+  "packages": [
+    {
+      "name": "ArteryTek_Community",
+      "maintainer": "Riza CELIK",
+      "email": "eposta@adresiniz.com",
+      "websiteURL": "https://github.com/rizacelik/ArduinoCore-AT32F4",
+      "help": {
+        "online": "https://github.com/rizacelik/ArduinoCore-AT32F4/issues"
+      },
+      "platforms": [
+        {
+          "name": "AT32F403ACGU7 Core Board",
+          "architecture": "at32f403a",
+          "version": "1.0.0",
+          "category": "Contributed",
+          "url": "https://github.com",
+          "archiveFileName": "at32f403a-1.0.0.zip",
+          "size": "BURAYA_ZIP_DOSYASININ_BYTE_BOYUTUNU_YAZIN",
+          "checksum": "SHA-256:BURAYA_ZIP_DOSYASININ_SHA256_KODUNU_YAZIN",
+          "boards": [
+            {
+              "name": "BlackPill AT32F403ACGU7"
+            }
+          ],
+          "toolsDependencies": [
+            {
+              "packager": "ArteryTek_Community",
+              "name": "xpack-arm-none-eabi-gcc",
+              "version": "11.2.1-1.2"
+            },
+            {
+              "packager": "ArteryTek_Community",
+              "name": "Artery_ISP_Console",
+              "version": "1.0.0"
+            }
+          ]
+        }
+      ],
+      "tools": [
+        {
+          "name": "xpack-arm-none-eabi-gcc",
+          "version": "11.2.1-1.2",
+          "systems": [
+            {
+              "host": "i686-mingw32",
+              "url": "https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/download/v11.2.1-1.2/xpack-arm-none-eabi-gcc-11.2.1-1.2-win32-x64.zip",
+              "archiveFileName": "xpack-arm-none-eabi-gcc-11.2.1-1.2-win32-x64.zip",
+              "checksum": "SHA-256:4a45e1df1c621f0a97a2bcb63977a3745ffcff7afc0e31ad2f3d5cc1272acf4b",
+              "size": "247612940"
+            },
+            {
+              "host": "x86_64-mingw32",
+              "url": "https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/download/v11.2.1-1.2/xpack-arm-none-eabi-gcc-11.2.1-1.2-win32-x64.zip",
+              "archiveFileName": "xpack-arm-none-eabi-gcc-11.2.1-1.2-win32-x64.zip",
+              "checksum": "SHA-256:4a45e1df1c621f0a97a2bcb63977a3745ffcff7afc0e31ad2f3d5cc1272acf4b",
+              "size": "247612940"
+            },
+            {
+              "host": "x86_64-pc-linux-gnu",
+              "url": "https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/download/v11.2.1-1.2/xpack-arm-none-eabi-gcc-11.2.1-1.2-linux-x64.tar.gz",
+              "archiveFileName": "xpack-arm-none-eabi-gcc-11.2.1-1.2-linux-x64.tar.gz",
+              "checksum": "SHA-256:7479becc1ea98fbceecadf1f036ddaba8dc39c9cce5cb45f0a7a36e923d33c9a",
+              "size": "235243515"
+            }
+          ]
+        },
+        {
+          "name": "Artery_ISP_Console",
+          "version": "1.0.0",
+          "systems": [
+            {
+              "host": "i686-mingw32",
+              "url": "https://github.com/rizacelik/ArduinoCore-AT32F4/releases/download/1.0.0/Artery_ISP_Console_Win32-x86_64_V3.0.20.zip",
+              "archiveFileName": "Artery_ISP_Console_Win32-x86_64_V3.0.20.zip",
+              "size": "13546527",
+              "checksum": "SHA-256:ab87e09e21aeb5b20c59a5df8074a9d9b9bbd19abf67958262e1d0f16d18f5be"
+            },
+            {
+              "host": "x86_64-mingw32",
+              "url": "https://github.com/rizacelik/ArduinoCore-AT32F4/releases/download/1.0.0/Artery_ISP_Console_Win32-x86_64_V3.0.20.zip",
+              "archiveFileName": "Artery_ISP_Console_Win32-x86_64_V3.0.20.zip",
+              "size": "13546527",
+              "checksum": "SHA-256:ab87e09e21aeb5b20c59a5df8074a9d9b9bbd19abf67958262e1d0f16d18f5be"
+            },
+            {
+              "host": "x86_64-pc-linux-gnu",
+              "url": "https://github.com/rizacelik/ArduinoCore-AT32F4/releases/download/1.0.0/Artery_ISP_Console_Linux-x86_64_V3.0.20.zip",
+              "archiveFileName": "Artery_ISP_Console_Linux-x86_64_V3.0.20.zip",
+              "size": "19488423",
+              "checksum": "SHA-256:1eb4d49146a79ff0516ffcf04a79c883c21139457da62e69f0e87e1487ea50b2"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

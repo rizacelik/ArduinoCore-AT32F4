@@ -1,0 +1,18 @@
+menu.upload_method=Upload method
+
+WeActStudioAT32F4.name=AT32F403ACGU7 BlackPill Boards
+WeActStudioAT32F4.build.mcu=cortex-m4
+#WeActStudioAT32F4.build.f_cpu=240000000L
+WeActStudioAT32F4.build.board=AT32F403ACGxx
+WeActStudioAT32F4.build.vect_flags=-DUSER_ADDR_ROM=0x08000000
+WeActStudioAT32F4.build.core=arduino
+WeActStudioAT32F4.build.extra_flags=-DAT32F403ACGU7 -USE_STDPERIPH_DRIVER
+WeActStudioAT32F4.build.variant=AT32F403ACGU7
+WeActStudioAT32F4.build.variant_system_lib=FrameLib.a
+WeActStudioAT32F4.build.ldscript=linker_scripts\AT32F403AxG_FLASH.ld
+
+# Upload yöntemi
+WeActStudioAT32F4.menu.upload_method.USBDFUMethod=Artery DFU ISP
+WeActStudioAT32F4.menu.upload_method.USBDFUMethod.upload.protocol=Artery_ISP
+WeActStudioAT32F4.menu.upload_method.USBDFUMethod.upload.tool=Artery_ISP_Console
+WeActStudioAT32F4.menu.upload_method.USBDFUMethod.upload.maximum_size=1048576
