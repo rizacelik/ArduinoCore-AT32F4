@@ -46,15 +46,15 @@
               "host": "i686-mingw32",
               "url": "https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/download/v11.2.1-1.2/xpack-arm-none-eabi-gcc-11.2.1-1.2-win32-x64.zip",
               "archiveFileName": "xpack-arm-none-eabi-gcc-11.2.1-1.2-win32-x64.zip",
-              "checksum": "sha256:8d788dbcb6f53afaec3b575e620af16d8cba10f1c9a083e1e3a810e16c400d0f",
-              "size": "4025928"
+              "checksum": "sha256:19b751f57647aa2d9dc37a94b144598a493848a1c00383cb0dc1d85ba4d34ad3",
+              "size": "4077006"
             },
             {
               "host": "x86_64-mingw32",
               "url": "https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/download/v11.2.1-1.2/xpack-arm-none-eabi-gcc-11.2.1-1.2-win32-x64.zip",
               "archiveFileName": "xpack-arm-none-eabi-gcc-11.2.1-1.2-win32-x64.zip",
-              "checksum": "sha256:8d788dbcb6f53afaec3b575e620af16d8cba10f1c9a083e1e3a810e16c400d0f",
-              "size": "4025928"
+              "checksum": "sha256:19b751f57647aa2d9dc37a94b144598a493848a1c00383cb0dc1d85ba4d34ad3",
+              "size": "4077006"
             },
             {
               "host": "x86_64-pc-linux-gnu",
