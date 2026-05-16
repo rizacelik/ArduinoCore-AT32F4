@@ -211,8 +211,15 @@ uint16_t DShot::dshot_prepare_packet(uint16_t value) {
 
 void DShot::write(uint16_t throttle) {
 
-    throttle = constrain(throttle, 0, 2047);
+    //throttle = constrain(throttle, 0, 2047);
     //throttle = map(throttle, 1000, 2000, 48, 2047);
+
+if (throttle <= 1000) {
+    throttle = 0;
+} else {
+    // PWM step * 2
+    throttle = ((throttle - 1000) * 2) + 46; 
+}
 
 
     uint16_t packet = dshot_prepare_packet(throttle);
@@ -252,18 +259,18 @@ void DShot::write(uint16_t throttle) {
 
 //   // ESC ARM
 //   for(int i = 0; i < 1000; i++){
-//       esc1.write(0);
-//       esc2.write(0);
-//       esc3.write(0);
-//       esc4.write(0);
+//       esc1.write(1000);
+//       esc2.write(1000);
+//       esc3.write(1000);
+//       esc4.write(1000);
 //   }
 //   delay(10);
 
 // }
 
 // void loop() {
-//    esc1.write(100);
-//    esc2.write(100);
-//    esc3.write(100);
-//    esc4.write(100);    
+//    esc1.write(1100);
+//    esc2.write(1100);
+//    esc3.write(1100);
+//    esc4.write(1100);    
 // }
