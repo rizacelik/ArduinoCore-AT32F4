@@ -1,4 +1,4 @@
-#include "libcore/SPI.h"
+#include "SPI.h"
 
 // MPU9250 Register Adresleri
 #define MPU9250_ADDRESS            0x68
@@ -24,6 +24,8 @@ unsigned long lastTime = 0;
 
 // Chip Select (CS) Pini
 const uint8_t MPU9250_CS_PIN = PA4;
+
+SPIClass SPI(SPI1);
 
 // SPI transfer fonksiyonu (Read/Write bit dahil)
 uint8_t spiTransfer(uint8_t reg, uint8_t data, bool read = false) {
