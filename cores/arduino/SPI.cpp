@@ -428,14 +428,21 @@ uint8_t SPIClass::recv(void)
     return this->read();
 }
 
-#if SPI_CLASS_1_ENABLE
-SPIClass SPI(SPI_CLASS_1_SPI);
+#ifndef SPI_SELECT
+  SPIClass SPI(SPI1);
+#else
+  SPIClass SPI(SPI_SELECT);
 #endif
 
-#if SPI_CLASS_2_ENABLE
-SPIClass SPI_2(SPI_CLASS_2_SPI);
-#endif
 
-#if SPI_CLASS_3_ENABLE
-SPIClass SPI_3(SPI_CLASS_3_SPI);
-#endif
+//#if SPI_CLASS_1_ENABLE
+//SPIClass SPI(SPI_CLASS_1_SPI);
+//#endif
+
+//#if SPI_CLASS_2_ENABLE
+//SPIClass SPI_2(SPI_CLASS_2_SPI);
+//#endif
+
+//#if SPI_CLASS_3_ENABLE
+//SPIClass SPI_3(SPI_CLASS_3_SPI);
+//#endif
