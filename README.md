@@ -1,4 +1,58 @@
 # ArduinoCore-AT32F4
+
+# Arduino Core Support for WeAct Studio BlackPill (AT32F403ACGU7)
+
+This repository provides an enhanced, updated, and community-driven fork of the official WeActStudio Arduino Core for the AT32F4 series. 
+
+Despite numerous community requests for essential libraries and peripheral support, the original upstream repository has lacked updates for a long time. To bridge this gap, this distribution integrates much-needed libraries, core platform updates, and comprehensive hardware support to make the **AT32F403ACGU7 BlackPill** fully functional and stable within the Arduino IDE ecosystem.
+
+---
+
+## 🚀 Key Enhancements in This Distribution
+
+* **Added Missing Libraries:** Integrated core hardware libraries that were previously omitted or incomplete in the official release.
+* **Peripheral Extensions:** Improved support for onboard timers, SPI/I2C buses, and optimized interface routing.
+* **Bug Fixes & Stability:** Resolved various compilation errors and structure mismatches encountered in the legacy core.
+* **Community-Driven:** Built to keep the AT32F4 series alive and highly accessible for developers using the traditional Arduino workflow.
+
+---
+
+## 🛠️ Hardware Specifications
+
+The target hardware for this core is the **WeAct Studio BlackPill AT32F403ACGU7** development board. Key specs include:
+
+* **MCU:** AT32F403ACGU7 @ 240MHz (ARM Cortex-M4)
+* **Memory:** 96+128 KB RAM / 256+768 KB ROM
+* **Peripherals:** 4x SPI, 3x I2C, 7x USART/UART, 14x Timers, USBFS, 2x CAN, and SDIO.
+
+> 📝 For full hardware details, schematics, and official datasheets, please refer to the [WeActStudio BlackPill Hardware Repository](https://github.com/WeActStudio/WeActStudio.BlackPill).
+
+---
+
+## 🤝 How to Contribute & Collaborate
+
+This project is fully open-source and relies on community collaboration to grow. Since this is an independent distribution born out of necessity, your feedback, bug reports, and code contributions are highly valued!
+
+Here is how you can help optimize and expand this core:
+
+### 1. 🐛 Report Bugs & Request Features
+If you encounter compilation failures, broken library functions, or unexpected hardware behavior:
+* Open an **Issue** with details about your setup.
+* Provide a minimal reproducible code snippet (MRE) if applicable.
+* Mention your operating system and Arduino IDE version.
+
+### 2. 🧪 Testing & Validation
+Simply downloading this core, running your existing Arduino projects on the BlackPill AT32, and sharing your success stories or performance benchmarks in the **Discussions** tab is a massive help!
+
+---
+
+## 🔗 References & Credits
+
+* **Original Core Base:** [WeActStudio/ArduinoCore-AT32F4]([https://github.com](https://github.com/WeActStudio/ArduinoCore-AT32F4))
+* **Hardware Design & Docs:** [WeActStudio.BlackPill](https://github.com/WeActStudio/WeActStudio.BlackPill)
+* **MCU Manufacturer:** [ArteryTek Official Website](https://arterytek.com)
+
+
 ## Using this core with the Arduino IDE
 
 ## 🛠 Installation Guide
