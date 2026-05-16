@@ -1,4 +1,4 @@
-#include "libcore/SPI.h"
+#include "SPI.h"
 
 // MPU9250 Register Adresleri
 #define MPU9250_ADDRESS            0x68
