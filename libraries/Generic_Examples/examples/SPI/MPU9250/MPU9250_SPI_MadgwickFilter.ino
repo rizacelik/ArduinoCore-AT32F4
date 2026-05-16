@@ -25,7 +25,9 @@ unsigned long lastTime = 0;
 // Chip Select (CS) Pini
 const uint8_t MPU9250_CS_PIN = PA4;
 
-SPIClass SPI(SPI1);
+#define SPI_SELECT  SPI1
+// #define SPI_SELECT  SPI2
+// #define SPI_SELECT  SPI3
 
 // SPI transfer fonksiyonu (Read/Write bit dahil)
 uint8_t spiTransfer(uint8_t reg, uint8_t data, bool read = false) {
