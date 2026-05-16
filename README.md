@@ -48,7 +48,7 @@ Simply downloading this core, running your existing Arduino projects on the Blac
 
 ## 🔗 References & Credits
 
-* **Original Core Base:** [WeActStudio/ArduinoCore-AT32F4]([https://github.com](https://github.com/WeActStudio/ArduinoCore-AT32F4))
+* **Original Core Base:** [WeActStudio/ArduinoCore-AT32F4](https://github.com/WeActStudio/ArduinoCore-AT32F4)
 * **Hardware Design & Docs:** [WeActStudio.BlackPill](https://github.com/WeActStudio/WeActStudio.BlackPill)
 * **MCU Manufacturer:** [ArteryTek Official Website](https://arterytek.com)
 
