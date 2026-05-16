@@ -268,14 +268,15 @@ The core routes the three independent hardware SPI peripherals to the following 
 ## 🧭 Hardware SPI Integration (MPU9250 IMU Example)
 
 The core exposes up to three explicit SPI buses. The class interfaces are structured as:
-- `SPI` maps to **SPI1**
-- `SPI_2` maps to **SPI2**
-- `SPI_3` maps to **SPI3**
+- `SPI1` maps to **#define SPI_SELECT SPI1**
+- `SPI2` maps to **#define SPI_SELECT SPI2**
+- `SPI3` maps to **#define SPI_SELECT SPI3**
 
 Below is an enterprise-grade register interface routine reading data from an **MPU9250 Inertial Measurement Unit** via the native **SPI** (`SPI1`) driver:
 
 ```cpp
 #include "SPI.h"
+#define SPI_SELECT SPI1
 
 // MPU9250 Register Definitions
 #define MPU9250_ADDRESS            0x68
