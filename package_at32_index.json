@@ -73,15 +73,15 @@
               "host": "i686-mingw32",
               "url": "https://github.com/rizacelik/ArduinoCore-AT32F4/releases/download/v1.0.0/Artery_ISP_Console_Win32-x86_64_V3.0.20.zip",
               "archiveFileName": "Artery_ISP_Console_Win32-x86_64_V3.0.20.zip",
-              "size": "4077006",
-              "checksum": "SHA-256:19b751f57647aa2d9dc37a94b144598a493848a1c00383cb0dc1d85ba4d34ad3"
+              "size": "4043895",
+              "checksum": "SHA-256:b34f8ca8a5ff2a44ca210b2572210c3fe6ac567c9df0a190917fbc92c681fb55"
             },
             {
               "host": "x86_64-mingw32",
               "url": "https://github.com/rizacelik/ArduinoCore-AT32F4/releases/download/v1.0.0/Artery_ISP_Console_Win32-x86_64_V3.0.20.zip",
               "archiveFileName": "Artery_ISP_Console_Win32-x86_64_V3.0.20.zip",
-              "size": "4077006",
-              "checksum": "SHA-256:19b751f57647aa2d9dc37a94b144598a493848a1c00383cb0dc1d85ba4d34ad3"
+              "size": "4043895",
+              "checksum": "SHA-256:b34f8ca8a5ff2a44ca210b2572210c3fe6ac567c9df0a190917fbc92c681fb55"
             },
             {
               "host": "x86_64-pc-linux-gnu",
