@@ -1,4 +1,6 @@
 
+// USART2 Serial2	PA2 / PA3	TX / RX
+
 String nmeaBuffer;
 bool nmeaMode = false;
 
