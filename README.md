@@ -426,6 +426,15 @@ void loop() {
 
 **I2C2** `PB10` / `PB11` pins are the same as USART3 pins. Therefore, you should not use USART3 when using I2C2. The reverse is also true; you cannot use I2C2 when using USART3. A conflict will occur.
 
+The default I2C support is I2C1. If you want to use a different I2C pin, you must define the pins in your Arduino program as follows. For example enable I2C2:
+
+```cpp
+
+#define WIRE_SCL_PIN PB10
+#define WIRE_SDA_PIN PB11
+
+```
+
 | Peripheral | Port Pin | Function | Mode |
 | :--- | :--- | :--- | :--- |
 | **I2C1**  | `PB6` / `PB7` | I2C1_SCL / I2C1_SDA | Default Configuration |
