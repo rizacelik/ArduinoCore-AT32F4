@@ -252,15 +252,15 @@ The core routes the three independent hardware SPI peripherals to the following 
 
 | SPI Peripheral | Signal Function | Port Pin | Pin Description |
 | :--- | :--- | :--- | :--- |
-| **SPI / SPI1** | `SPI1_CS` | `PA4` | Chip Select (Default IMU / Peripherals) |
+| **SPI1** | `SPI1_CS` | `PA4` | Chip Select (Default IMU / Peripherals) |
 | | `SPI1_SCK` | `PA5` | Serial Clock |
 | | `SPI1_MISO` | `PA6` | Master In Slave Out |
 | | `SPI1_MOSI` | `PA7` | Master Out Slave In |
-| **SPI_2 / SPI2**| `SPI2_CS` | `PB12` | Chip Select |
+| **SPI2**| `SPI2_CS` | `PB12` | Chip Select |
 | | `SPI2_SCK` | `PB13` | Serial Clock |
 | | `SPI2_MISO` | `PB14` | Master In Slave Out |
 | | `SPI2_MOSI` | `PB15` | Master Out Slave In |
-| **SPI_3 / SPI3**| `SPI3_CS` | `PA15` | Chip Select |
+| **SPI3**| `SPI3_CS` | `PA15` | Chip Select |
 | | `SPI3_SCK` | `PB3` | Serial Clock |
 | | `SPI3_MISO` | `PB4` | Master In Slave Out |
 | | `SPI3_MOSI` | `PB5` | Master Out Slave In |
