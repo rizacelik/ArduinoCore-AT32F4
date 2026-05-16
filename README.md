@@ -48,6 +48,24 @@ An Arduino Board Support Package (BSP) tailored for ArteryTek AT32F4 microcontro
 
 ---
 
+## Serial print support
+
+You can print the code you've written to the Arduino's Serial display. Typical usage is as follows.
+
+```cpp
+void setup() {
+  Serial.begin(115200); 
+  Serial.println("AT32F403a Serial Initialized.");
+}
+
+void loop() {
+    Serial.println("AT32F403A Board");
+  // Your code here
+  
+}
+```
+
+
 ## 🔌 Hardware UART Configuration
 
 The core isolates communication strictly onto hardware peripherals to maintain deterministic timing. The physical pin mappings are designated as follows:
@@ -283,6 +301,16 @@ void loop() {
 ```
 
 ---
+
+## I2C
+
+**I2C2** `PB10` / `PB11` pins are the same as USART3 pins. Therefore, you should not use USART3 when using I2C2. The reverse is also true; you cannot use I2C2 when using USART3. A conflict will occur.
+
+| Peripheral | Port Pin | Function | Mode |
+| :--- | :--- | :--- | :--- |
+| **I2C1**  | `PB6` / `PB7` | I2C1_SCL / I2C1_SDA | Default Configuration |
+| **I2C2**  | `PB10` / `PB11` | I2C2_SCL / I2C2_SDA | Default Configuration |
+| **I2C3**  | `PA8` / `PC9` | I2C3_SCL / I2C3_SDA | Default Configuration |
 
 
 ## ⚖️ License
