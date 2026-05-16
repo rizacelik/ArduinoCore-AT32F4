@@ -1,6 +1,6 @@
 ##==============================================##
-name=WeActStudio AT32F403A Boards
-version=0.0.1
+name=ArteryTek AT32F4 Boards
+version=1.0.0
 ##==============================================##
 ####AT32 compile variables
 ## compiler variables
