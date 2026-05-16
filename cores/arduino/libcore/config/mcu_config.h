@@ -60,13 +60,13 @@
 //#define WIRE_SDA_PIN                        PB7
 //#define WIRE_SCL_PIN                        PB6
 
-#ifndef WIRE_SDA_PIN
-  #define WIRE_SDA_PIN                        PB7  // default SDA pin
-#endif
+//#ifndef WIRE_SDA_PIN
+//  #define WIRE_SDA_PIN                        PB7  // default SDA pin
+//#endif
 
-#ifndef WIRE_SCL_PIN
-  #define WIRE_SCL_PIN                        PB6  // default SCL pin
-#endif
+//#ifndef WIRE_SCL_PIN
+//  #define WIRE_SCL_PIN                        PB6  // default SCL pin
+//#endif
 
 #define WIRE_DELAY                          0
 #define WIRE_BEGIN_TIMEOUT                  100 // ms
