@@ -1,5 +1,7 @@
 #include <Wire.h>
 
+// Default settings I2C1
+
 const int MPU_ADDR = 0x68;
 #define ACCEL_SENSITIVITY 16384.0
 
