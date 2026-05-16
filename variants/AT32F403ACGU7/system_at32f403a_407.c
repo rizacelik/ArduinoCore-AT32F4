@@ -35,6 +35,7 @@
 #include "at32f403a_407.h"
 #include "at32f403a_407_crm.h"
 
+
 /** @addtogroup AT32F403A_407_system_private_defines
   * @{
   */
