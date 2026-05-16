@@ -1,6 +1,10 @@
 #include <Wire.h>
 #include <math.h>
 
+// Setting I2C2
+#define WIRE_SCL_PIN PB10
+#define WIRE_SDA_PIN PB11
+
 const int MPU_ADDR = 0x68;
 
 // Accelerometer sensitivity (2g modu)
