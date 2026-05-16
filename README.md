@@ -211,10 +211,10 @@ Servo servo4;
 int i = 0;
 
 void setup() {
-  servo1.attach(3);
-  servo2.attach(5); 
-  servo3.attach(6); 
-  servo4.attach(9); 
+  servo1.attach(PB0);
+  servo2.attach(PB1); 
+  servo3.attach(PB4); 
+  servo4.attach(PB5); 
 }
 
 void loop() {
