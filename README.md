@@ -62,7 +62,7 @@ Simply downloading this core, running your existing Arduino projects on the Blac
 3. Locate the **Additional Boards Manager URLs** input box and inject the following raw manifest pointer URL:
 To compile for this core with the Arduino IDE, add the following URL to the boards manager.
 
-`https://raw.githubusercontent.com/rizacelik/ArduinoCore-AT32F4/refs/heads/main/package_at32_index.json`
+`https://raw.githubusercontent.com/rizacelik/ArduinoCore-AT32F4/refs/heads/main/package_at32F403_index.json`
 
 ![image](at32.png)
 
