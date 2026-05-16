@@ -145,6 +145,53 @@ void loop() {
 
 ---
 
+### Servo Control Example
+
+```cpp
+#include <Servo.h>
+Servo servo1; 
+Servo servo2;
+Servo servo3;
+Servo servo4;
+
+int i = 0;
+
+void setup() {
+  servo1.attach(3);
+  servo2.attach(5); 
+  servo3.attach(6); 
+  servo4.attach(9); 
+}
+
+void loop() {
+  for (i = 0; i < 180; i++) { 
+    servo1.write(i);              
+    servo2.write(i);     
+    servo3.write(i);
+    servo4.write(i);         
+    delay(10);                      
+  }
+
+  for (i = 180; i > 0; i--) { 
+    servo1.write(i);                
+    servo2.write(i);     
+    servo3.write(i);
+    servo4.write(i);          
+    delay(10);                      
+  }
+}
+
+```
+
+You can also use the `writeMicroseconds()` function instead of the `write()` function. It's especially good for controlling brushless or DC motors.
+
+```cpp
+servo1.writeMicroseconds(1500);
+servo2.writeMicroseconds(1500);
+servo3.writeMicroseconds(1500);
+servo4.writeMicroseconds(1500);
+```
+
 ### Native Hardware SPI Pin Mapping
 
 The core routes the three independent hardware SPI peripherals to the following physical pins:
