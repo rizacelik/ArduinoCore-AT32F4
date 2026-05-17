@@ -454,18 +454,42 @@ void loop() {
 
 The default I2C support is I2C1. If you want to use a different I2C pin, you must define the pins in your Arduino program as follows. For example enable I2C2:
 ```cpp
+
+#include <Wire.h>
 // Setting I2C1
 #define WIRE_SCL_PIN PB6
 #define WIRE_SDA_PIN PB7
 TwoWire Wire(WIRE_SCL_PIN, WIRE_SDA_PIN, WIRE_DELAY);
 
+void setup() {
+  Wire.begin(); // We are initializing the I2C2 bus.
+}
+
+void loop() {
+  Wire.beginTransmission(0x50); // The address of the device you will be communicating with.
+  // You can perform your operations by typing Wire instead of Wire.
+  Wire.endTransmission();
+}
+
 ```
 
 ```cpp
+
+#include <Wire.h>
 // Setting I2C2
 #define WIRE_SCL_PIN PB10
 #define WIRE_SDA_PIN PB11
-TwoWire Wire(WIRE_SCL_PIN, WIRE_SDA_PIN, WIRE_DELAY);
+TwoWire Wire2(WIRE_SCL_PIN, WIRE_SDA_PIN, WIRE_DELAY);
+
+void setup() {
+  Wire2.begin(); // We are initializing the I2C2 bus.
+}
+
+void loop() {
+  Wire2.beginTransmission(0x50); // The address of the device you will be communicating with.
+  // You can perform your operations by typing Wire2 instead of Wire.
+  Wire2.endTransmission();
+}
 
 ```
 
