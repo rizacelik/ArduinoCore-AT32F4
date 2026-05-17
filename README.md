@@ -64,7 +64,7 @@ To compile for this core with the Arduino IDE, add the following URL to the boar
 
 `https://raw.githubusercontent.com/rizacelik/ArduinoCore-AT32F4/refs/heads/main/package_at32F403_index.json`
 
-![image](at32.png)
+![image](img/at32.png)
 
 4. Navigate to **Tools > Board > Boards Manager...**
 5. Input `ArteryTek` or `AT32F403A` in the search index panel.
