@@ -276,9 +276,11 @@ Below is an enterprise-grade register interface routine reading data from an **M
 
 ```cpp
 #include "SPI.h"
-#define SPI_SELECT SPI1
 
-// MPU9250 Register Definitions
+#define SPI_SELECT SPI1
+//#define SPI_SELECT SPI2
+//#define SPI_SELECT SPI3
+
 #define MPU9250_ADDRESS            0x68
 #define MPU9250_WHO_AM_I           0x75
 #define MPU9250_PWR_MGMT_1         0x6B
@@ -292,18 +294,24 @@ Below is an enterprise-grade register interface routine reading data from an **M
 
 const uint8_t MPU9250_CS_PIN = PA4;
 
+// Calibration Variables
 float accelOffsetX = 0, accelOffsetY = 0, accelOffsetZ = 0;
 float gyroOffsetX = 0, gyroOffsetY = 0, gyroOffsetZ = 0;
+
+// Filtered Final Angles (for Drone Control Loop)
+float pitch = 0, roll = 0; 
+unsigned long lastTime = 0;
+
+// Drone Filter Coefficient (98% Gyroscope to completely eliminate motor vibrations)
+const float alpha = 0.98; 
 
 uint8_t spiTransfer(uint8_t reg, uint8_t data, bool read = false) {
     uint8_t result;
     uint8_t txByte = read ? (reg | 0x80) : reg;
-    
     digitalWrite(MPU9250_CS_PIN, LOW);
     SPI.transfer(txByte);
     result = SPI.transfer(data);
     digitalWrite(MPU9250_CS_PIN, HIGH);
-    
     delayMicroseconds(10);
     return result;
 }
@@ -336,29 +344,31 @@ int16_t read16BitRegister(uint8_t regHigh) {
 bool initializeMPU9250() {
     Serial.println("Initializing MPU9250 via SPI...");
     uint8_t whoami = readRegister(MPU9250_WHO_AM_I);
-    Serial.print("WHO_AM_I Registry: 0x");
-    Serial.println(whoami, HEX);
-    
     if (whoami != 0x71 && whoami != 0x73) {
-        Serial.println("CRITICAL ERROR: MPU9250 sensor transaction failed.");
+        Serial.println("CRITICAL ERROR: MPU9250 missing.");
         return false;
     }
     
-    writeRegister(MPU9250_PWR_MGMT_1, 0x80);  // Logic Device Reset
+    writeRegister(MPU9250_PWR_MGMT_1, 0x80);  
     delay(100);
-    writeRegister(MPU9250_PWR_MGMT_1, 0x01);  // Auto-clock configuration
+    writeRegister(MPU9250_PWR_MGMT_1, 0x01);  // The most reliable time source: Automatic gyroscope clock.
     delay(100);
-    writeRegister(MPU9250_CONFIG, 0x03);       // Gyro/Accel Low Pass Filtering
-    writeRegister(MPU9250_GYRO_CONFIG, 0x08);  // Scale allocation: ±500 dps
-    writeRegister(MPU9250_ACCEL_CONFIG, 0x08); // Scale allocation: ±4g
+    
+   // IMPORTANT FOR DRONE: Digital Low-Pass Filter (DLPF) Setting
+   // Hardware dampens motor vibrations by setting the gyro bandwidth to ~41Hz and the accelerometer to ~45Hz.
+
+    writeRegister(MPU9250_CONFIG, 0x03);       
     writeRegister(MPU9250_ACCEL_CONFIG2, 0x03);
-    writeRegister(MPU9250_INT_PIN_CFG, 0x02);  // Enable register bypassing
+
+    writeRegister(MPU9250_GYRO_CONFIG, 0x08);  // ±500 dps (Sensibility: 65.5 LSB/dps)
+    writeRegister(MPU9250_ACCEL_CONFIG, 0x08); // ±4g (Sensibility: 8192 LSB/g)
+    writeRegister(MPU9250_INT_PIN_CFG, 0x02);  
     delay(100);
     return true;
 }
 
-void calibrateMPU9250(int samples = 500) {
-    Serial.println("\nCalibration Active... Keep the sensor stationary!");
+void calibrateMPU9250(int samples = 1000) { // We increased the sample count for the drone to 1000.
+    Serial.println("\n[KALİBRASYON] Sensörü düz bir zeminde tamamen HAREKETSİZ bırakın!");
     delay(3000);
     long axSum = 0, aySum = 0, azSum = 0;
     long gxSum = 0, gySum = 0, gzSum = 0;
@@ -370,55 +380,70 @@ void calibrateMPU9250(int samples = 500) {
         gxSum += read16BitRegister(MPU9250_GYRO_XOUT_H);
         gySum += read16BitRegister(MPU9250_GYRO_XOUT_H + 2);
         gzSum += read16BitRegister(MPU9250_GYRO_XOUT_H + 4);
-        delay(5);
+        delayMicroseconds(2000); // 2ms aralıklarla hızlı örnekleme
     }
     
-    accelOffsetZ = (azSum / samples) - 8192; // 1g offset reference at ±4g scale
     accelOffsetX = axSum / samples;
     accelOffsetY = aySum / samples;
+    accelOffsetZ = (azSum / samples) - 8192; // Gravity balance (1g) on ​​a scale of ±4g
+    
     gyroOffsetX = gxSum / samples;
     gyroOffsetY = gySum / samples;
     gyroOffsetZ = gzSum / samples;
-    Serial.println("Calibration completed.");
+    Serial.println("[OK] Calibration is complete. The motors can now operate.");
 }
 
 void readSensorData() {
-    float ax = read16BitRegister(MPU9250_ACCEL_XOUT_H) - accelOffsetX;
-    float ay = read16BitRegister(MPU9250_ACCEL_XOUT_H + 2) - accelOffsetY;
-    float az = read16BitRegister(MPU9250_ACCEL_XOUT_H + 4) - accelOffsetZ;
+    // Calculate cycle time (dt) with microsecond precision.
+    unsigned long currentTime = micros();
+    float dt = (currentTime - lastTime) / 1000000.0; 
+    lastTime = currentTime;
+    if (dt <= 0 || dt > 0.1) dt = 0.004; // Firewall (e.g., for a 250Hz loop)
 
-    float accelX = ax / 8192.0;
-    float accelY = ay / 8192.0;
-    float accelZ = az / 8192.0;
+    // 1. Accelerometer Data (Reset and converted to g units)
+    float accelX = (read16BitRegister(MPU9250_ACCEL_XOUT_H) - accelOffsetX) / 8192.0;
+    float accelY = (read16BitRegister(MPU9250_ACCEL_XOUT_H + 2) - accelOffsetY) / 8192.0;
+    float accelZ = (read16BitRegister(MPU9250_ACCEL_XOUT_H + 4) - accelOffsetZ) / 8192.0;
     
+    // Geometric Angle Formulas Compliant with Drone Aviation Standards
     float pitchAcc = atan2(-accelX, sqrt(accelY * accelY + accelZ * accelZ)) * 180.0 / M_PI;
-    float rollAcc = atan2(accelY, sqrt(accelX * accelX + accelZ * accelZ)) * 180.0 / M_PI;
+    float rollAcc  = atan2(accelY, accelZ) * 180.0 / M_PI; // Düzeltilen formül
 
-    Serial.print("Pitch: "); Serial.print(pitchAcc);
-    Serial.print(" | Roll: "); Serial.println(rollAcc);
+    // 2. Gyroscope Data (Reset and converted to dps/degrees)
+    float gyroX = (read16BitRegister(MPU9250_GYRO_XOUT_H) - gyroOffsetX) / 65.5;
+    float gyroY = (read16BitRegister(MPU9250_GYRO_XOUT_H + 2) - gyroOffsetY) / 65.5;
+
+    // 3. Drone Type Heavy Duty Complementary Filter
+    // It takes 98% of the angle accurately from the gyroscope to filter out vibrations, and equates the remaining 2% with the accelerometer.
+    pitch = alpha * (pitch + gyroY * dt) + (1.0 - alpha) * pitchAcc;
+    roll  = alpha * (roll + gyroX * dt) + (1.0 - alpha) * rollAcc;
+
+    // Stable outputs that you will feed to the PID controller:
+    Serial.print("P:"); Serial.print(pitch, 2);
+    Serial.print(" R:"); Serial.println(roll, 2);
 }
 
 void setup() {
     Serial.begin(115200);
-    Serial.println("\nMPU9250 Hardware SPI Interface Program");
-    
     pinMode(MPU9250_CS_PIN, OUTPUT);
     digitalWrite(MPU9250_CS_PIN, HIGH);
     
     SPI.begin();
-    SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0)); // Initialize at 8 MHz
+    SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0)); 
     
     if (!initializeMPU9250()) {
-        while (1); // Halt system on missing hardware signature
+        while (1); 
     }
     
     calibrateMPU9250();
+    lastTime = micros(); // Start the timer.
 }
 
 void loop() {
     readSensorData();
-    delay(20);
+    delay(4); // ~250Hz loop rate (ideal standard for drone controllers)
 }
+
 ```
 
 ---
