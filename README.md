@@ -70,6 +70,7 @@ To compile for this core with the Arduino IDE, add the following URL to the boar
 5. Input `ArteryTek` or `AT32F403A` in the search index panel.
 6. Select the target framework iteration and execute **Install**.
 
+![image](img/screen.png)
 ---
 
 ## 🔧 Hardware Requirements & Driver Installation
