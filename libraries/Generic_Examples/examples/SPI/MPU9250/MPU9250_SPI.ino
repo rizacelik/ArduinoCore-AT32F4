@@ -16,11 +16,8 @@
 // Chip Select (CS) Pini
 const uint8_t MPU9250_CS_PIN = PA4;
 
-// Defination SPI Class
-
-#define SPI_SELECT  SPI1
-// #define SPI_SELECT  SPI2
-// #define SPI_SELECT  SPI3
+// Defination SPI1 Class
+SPIClass SPI(SPI1);
 
 // SPI transfer  (Read/Write bit)
 uint8_t spiTransfer(uint8_t reg, uint8_t data, bool read = false) {
