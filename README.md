@@ -268,18 +268,20 @@ The core routes the three independent hardware SPI peripherals to the following 
 ## 🧭 Hardware SPI Integration (MPU9250 IMU Example)
 
 The core exposes up to three explicit SPI buses. The class interfaces are structured as:
-- `SPI1` maps to **#define SPI_SELECT SPI1**
-- `SPI2` maps to **#define SPI_SELECT SPI2**
-- `SPI3` maps to **#define SPI_SELECT SPI3**
+- `SPI1` maps to **SPIClass SPI(SPI1)**
+- `SPI2` maps to **SPIClass SPI(SPI2)**
+- `SPI3` maps to **SPIClass SPI(SPI3)**
 
 Below is an enterprise-grade register interface routine reading data from an **MPU9250 Inertial Measurement Unit** via the native **SPI** (`SPI1`) driver:
 
 ```cpp
 #include "SPI.h"
 
-#define SPI_SELECT SPI1
-//#define SPI_SELECT SPI2
-//#define SPI_SELECT SPI3
+const uint8_t MPU9250_CS_PIN = PA4;
+
+SPIClass SPI(SPI1);
+//SPIClass SPI(SPI2);
+//SPIClass SPI(SPI3);
 
 #define MPU9250_ADDRESS            0x68
 #define MPU9250_WHO_AM_I           0x75
@@ -291,8 +293,6 @@ Below is an enterprise-grade register interface routine reading data from an **M
 #define MPU9250_INT_PIN_CFG        0x37
 #define MPU9250_ACCEL_XOUT_H       0x3B
 #define MPU9250_GYRO_XOUT_H        0x43
-
-const uint8_t MPU9250_CS_PIN = PA4;
 
 // Calibration Variables
 float accelOffsetX = 0, accelOffsetY = 0, accelOffsetZ = 0;
@@ -453,11 +453,19 @@ void loop() {
 **I2C2** `PB10` / `PB11` pins are the same as USART3 pins. Therefore, you should not use USART3 when using I2C2. The reverse is also true; you cannot use I2C2 when using USART3. A conflict will occur.
 
 The default I2C support is I2C1. If you want to use a different I2C pin, you must define the pins in your Arduino program as follows. For example enable I2C2:
+```cpp
+// Setting I2C1
+#define WIRE_SCL_PIN PB6
+#define WIRE_SDA_PIN PB7
+TwoWire Wire(WIRE_SCL_PIN, WIRE_SDA_PIN, WIRE_DELAY);
+
+```
 
 ```cpp
-
+// Setting I2C2
 #define WIRE_SCL_PIN PB10
 #define WIRE_SDA_PIN PB11
+TwoWire Wire(WIRE_SCL_PIN, WIRE_SDA_PIN, WIRE_DELAY);
 
 ```
 
