@@ -1,6 +1,10 @@
 #include <Wire.h>
 
 // Default settings I2C1
+#define WIRE_SCL_PIN PB6
+#define WIRE_SDA_PIN PB7
+
+TwoWire Wire(WIRE_SCL_PIN, WIRE_SDA_PIN, WIRE_DELAY);
 
 const int MPU_ADDR = 0x68;
 #define ACCEL_SENSITIVITY 16384.0
