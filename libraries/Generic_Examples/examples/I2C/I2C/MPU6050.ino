@@ -5,6 +5,8 @@
 #define WIRE_SCL_PIN PB10
 #define WIRE_SDA_PIN PB11
 
+TwoWire Wire(WIRE_SCL_PIN, WIRE_SDA_PIN, WIRE_DELAY);
+
 const int MPU_ADDR = 0x68;
 
 // Accelerometer sensitivity (2g modu)
