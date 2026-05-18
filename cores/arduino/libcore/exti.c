@@ -20,6 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 #include "exti.h"
 #include "gpio.h"
 
@@ -29,10 +30,10 @@
 static EXTI_CallbackFunction_t EXTI_Function[16] = {0};
 
 /**
-  * @brief  获取外部中断的中断通道
-  * @param  Pin: 引脚编号
-  * @retval 通道编号
-  */
+* @brief Get the interrupt channel for external interrupts
+* @param Pin: Pin number
+* @retval Channel number
+*/
 static IRQn_Type EXTI_GetIRQn(uint8_t Pin)
 {
     IRQn_Type EXINTx_IRQn = EXINT0_IRQn;
@@ -72,14 +73,15 @@ static IRQn_Type EXTI_GetIRQn(uint8_t Pin)
 }
 
 /**
-  * @brief  外部中断初始化
-  * @param  Pin: 引脚编号
-  * @param  Function: 回调函数
-  * @param  Trigger_Mode: 触发方式
-  * @param  PreemptionPriority: 抢占优先级
-  * @param  SubPriority: 子优先级
-  * @retval 无
-  */
+* @brief External interrupt initialization
+* @param Pin: Pin number
+* @param Function: Callback function
+* @param Trigger_Mode: Trigger mode
+* @param PreemptionPriority: Preemption priority
+* @param SubPriority: Subpriority
+* @retval None
+*/
+
 void EXTIx_Init(
     uint8_t Pin,
     EXTI_CallbackFunction_t Function,
@@ -88,22 +90,40 @@ void EXTIx_Init(
     uint8_t SubPriority
 )
 {
-	exint_init_type exint_init_struct;
+    exint_init_type exint_init_struct;
     uint8_t Pinx;
+    uint32_t Portx;
 
     if(!IS_PIN(Pin))
         return;
 
     Pinx = GPIO_GetPinNum(Pin);
+    Portx = GPIO_GetPortNum(Pin); // Get the port number (0=A, 1=B, 2=C etc.)
 
     if(Pinx > 15)
         return;
 
     EXTI_Function[Pinx] = Function;
 
-	crm_periph_clock_enable(CRM_IOMUX_PERIPH_CLOCK, TRUE);
+    // 1. Open the SCFG/IOMUX line for the external interrupt controller (We trigger both macros)
+    #ifdef CRM_SCFG_PERIPH_CLOCK
+        crm_periph_clock_enable(CRM_SCFG_PERIPH_CLOCK, TRUE);
+    #endif
+    #ifdef CRM_IOMUX_PERIPH_CLOCK
+        crm_periph_clock_enable(CRM_IOMUX_PERIPH_CLOCK, TRUE);
+    #endif
 
-	gpio_exint_line_config(GPIO_GetPortNum(Pin), (gpio_pins_source_type)Pinx);
+    // 2. Activate the clock line of the port you are using (e.g., GPIOB)
+    // In the AT32 library, Port0=GPIOA, Port1=GPIOB.
+    if(Portx == 0)      crm_periph_clock_enable(CRM_GPIOA_PERIPH_CLOCK, TRUE);
+    else if(Portx == 1) crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
+    else if(Portx == 2) crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
+    else if(Portx == 3) crm_periph_clock_enable(CRM_GPIOD_PERIPH_CLOCK, TRUE);
+    // ----------------------------------------
+
+    // Configure interrupt line
+    gpio_exint_line_config(Portx, (gpio_pins_source_type)Pinx);
+    
     exint_default_para_init(&exint_init_struct);
     exint_init_struct.line_select = 1 << Pinx;
     exint_init_struct.line_mode = EXINT_LINE_INTERRUPUT;
@@ -112,16 +132,17 @@ void EXTIx_Init(
     exint_init(&exint_init_struct);
 
     nvic_irq_enable(EXTI_GetIRQn(Pin), PreemptionPriority, SubPriority);
-
 }
 
+
+
 /**
-  * @brief  外部中断初始化 (Arduino)
-  * @param  Pin: 引脚编号
-  * @param  function: 回调函数
-  * @param  Trigger_Mode: 触发方式
-  * @retval 无
-  */
+* @brief External interrupt initialization (Arduino)
+* @param Pin: Pin number
+* @param function: Callback function
+* @param Trigger_Mode: Trigger mode
+* @retval None
+*/
 void attachInterrupt(uint8_t Pin, EXTI_CallbackFunction_t Function, exint_polarity_config_type line_polarity)
 {
     EXTIx_Init(
@@ -134,10 +155,10 @@ void attachInterrupt(uint8_t Pin, EXTI_CallbackFunction_t Function, exint_polari
 }
 
 /**
-  * @brief  关闭给定的中断 (Arduino)
-  * @param  Pin: 引脚编号
-  * @retval 无
-  */
+* @brief Disables the given interrupt (Arduino)
+* @param Pin: Pin number
+* @retval None
+*/
 void detachInterrupt(uint8_t Pin)
 {
     if(!IS_PIN(Pin))
@@ -156,61 +177,61 @@ do{\
 }while(0)
 
 /**
-  * @brief  外部中断入口，通道0
-  * @param  无
-  * @retval 无
-  */
-void EXTI0_IRQHandler(void)
+* @brief External interrupt entry point, channel 0
+* @param None
+* @retval None
+*/
+void EXINT0_IRQHandler(void)
 {
     EXTIx_IRQHANDLER(0);
 }
 
 /**
-  * @brief  外部中断入口，通道1
-  * @param  无
-  * @retval 无
-  */
-void EXTI1_IRQHandler(void)
+* @brief External interrupt entry point, channel 1
+* @param None
+* @retval None
+*/
+void EXINT1_IRQHandler(void) 
 {
     EXTIx_IRQHANDLER(1);
 }
 
 /**
-  * @brief  外部中断入口，通道2
-  * @param  无
-  * @retval 无
-  */
-void EXTI2_IRQHandler(void)
+* @brief External interrupt entry point, channel 2
+* @param None
+* @retval None
+*/
+void EXINT2_IRQHandler(void) 
 {
     EXTIx_IRQHANDLER(2);
 }
 
 /**
-  * @brief  外部中断入口，通道3
-  * @param  无
-  * @retval 无
-  */
-void EXTI3_IRQHandler(void)
+* @brief External interrupt entry point, channel 3
+* @param None
+* @retval None
+*/
+void EXINT3_IRQHandler(void) 
 {
     EXTIx_IRQHANDLER(3);
 }
 
 /**
-  * @brief  外部中断入口，通道4
-  * @param  无
-  * @retval 无
-  */
-void EXTI4_IRQHandler(void)
+* @brief External interrupt entry point, channel 4
+* @param None
+* @retval None
+*/
+void EXINT4_IRQHandler(void) 
 {
     EXTIx_IRQHANDLER(4);
 }
 
 /**
-  * @brief  外部中断入口，通道9~5
-  * @param  无
-  * @retval 无
-  */
-void EXTI9_5_IRQHandler(void)
+* @brief External interrupt entry point, channels 9~5
+* @param None
+* @retval None
+*/
+void EXINT9_5_IRQHandler(void) 
 {
     EXTIx_IRQHANDLER(5);
     EXTIx_IRQHANDLER(6);
@@ -220,11 +241,11 @@ void EXTI9_5_IRQHandler(void)
 }
 
 /**
-  * @brief  外部中断入口，通道15~10
-  * @param  无
-  * @retval 无
-  */
-void EXTI15_10_IRQHandler(void)
+* @brief External interrupt entry point, channels 15~10
+* @param None
+* @retval None
+*/
+void EXINT15_10_IRQHandler(void) 
 {
     EXTIx_IRQHANDLER(10);
     EXTIx_IRQHANDLER(11);
@@ -233,3 +254,4 @@ void EXTI15_10_IRQHandler(void)
     EXTIx_IRQHANDLER(14);
     EXTIx_IRQHANDLER(15);
 }
+
