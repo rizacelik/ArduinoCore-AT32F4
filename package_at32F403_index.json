@@ -16,8 +16,8 @@
           "category": "Contributed",
           "url": "https://github.com/rizacelik/ArduinoCore-AT32F4/releases/download/v1.0.0/at32f403a-1.0.0.zip",
           "archiveFileName": "at32f403a-1.0.0.zip",
-          "size": "996322",
-          "checksum": "SHA-256:6498a70b493208f868558982cb8a1decb7f9573a0efbac20e50519db23569251",
+          "size": "996469",
+          "checksum": "SHA-256:da3b16e1cfe17687f9fafcaaff5a8c3c454e6d43b60aefa268f5ef2c8b6dc02d",
           "boards": [
             {
               "name": "BlackPill AT32F403ACGU7"
