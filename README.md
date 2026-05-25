@@ -132,6 +132,8 @@ The core isolates communication strictly onto hardware peripherals to maintain d
 | **USART2** Serial2 | `PA2` / `PA3` | TX / RX | Default Configuration |
 | **USART3** Serial3 | `PB10` / `PB11` | TX / RX | Default Configuration |
 | **UART4** Serial4 | `PA0` / `PA1` | TX / RX | Remapped Configuration |
+| **UART5** Serial5 | `PB9` / `PB8` | TX / RX | Remapped Configuration |
+| **UART7** Serial7 | `PB4` / `PB3` | TX / RX | Remapped Configuration |
 
 ### Code Implementation Example
 ```cpp
