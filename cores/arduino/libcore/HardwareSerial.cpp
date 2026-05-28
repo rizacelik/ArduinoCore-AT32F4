@@ -23,10 +23,14 @@ UART4 (Remap)
 PA0: UART4_TX
 PA1: UART4_RX
 
-USART1 RX -> DMA1_CHANNEL5
-USART2 RX -> DMA1_CHANNEL6
-USART3 RX -> DMA1_CHANNEL3
-UART4 RX -> DMA2_CHANNEL3
+UART5 (Remap)
+PB8 UART5_RX
+PB9 UART5_TX
+
+UART7 (Remap)
+PB3  UART7_RX
+PB4  UART7_TX
+
 */
 
 // Buffer'lar (her biri için ayrı bellek ayrılacak)
@@ -34,12 +38,16 @@ static uint8_t rx_buffer1[512];
 static uint8_t rx_buffer2[512];
 static uint8_t rx_buffer3[512];
 static uint8_t rx_buffer4[512];
+static uint8_t rx_buffer5[512];
+static uint8_t rx_buffer6[512];
 
 // Global nesnelerin TANIMLAMASI (definition) → constructor burada çağrılır
 HardwareSerial Serial1(USART1, rx_buffer1, 512);
 HardwareSerial Serial2(USART2, rx_buffer2, 512);
 HardwareSerial Serial3(USART3, rx_buffer3, 512);
 HardwareSerial Serial4(UART4,  rx_buffer4, 512);
+HardwareSerial Serial5(UART5,  rx_buffer5, 512);
+HardwareSerial Serial7(UART7,  rx_buffer6, 512);
 
 typedef struct
 {
@@ -109,7 +117,18 @@ void HardwareSerial::selectDmaChannel(void)
     _dma_rx = DMA2_CHANNEL3;
     _dma_tx = DMA2_CHANNEL5;
   }
+  // === GÜNCELLEME: UART5 ===
+  else if (_usart == UART5) {
+    _dma_rx = DMA2_CHANNEL1;
+    _dma_tx = DMA2_CHANNEL2;
+  }
+  // === GÜNCELLEME: UART7 ===
+  else if (_usart == UART7) {
+    _dma_rx = DMA2_CHANNEL4;
+    _dma_tx = DMA2_CHANNEL5;
+  }
 }
+
 
 /* ---------------- GPIO INIT ---------------- */
 void HardwareSerial::initGpio(void)
@@ -126,12 +145,16 @@ void HardwareSerial::initGpio(void)
   if (_usart == USART2) { gpio.gpio_pins = GPIO_PINS_2; gpio_init(GPIOA, &gpio); }
   if (_usart == USART3) { gpio.gpio_pins = GPIO_PINS_10; gpio_init(GPIOB, &gpio); }
   if (_usart == UART4) { gpio.gpio_pins = GPIO_PINS_0; gpio_init(GPIOA, &gpio); }
+  if (_usart == UART5) { gpio.gpio_pins = GPIO_PINS_9; gpio_init(GPIOB, &gpio); }
+  if (_usart == UART7) { gpio.gpio_pins = GPIO_PINS_4; gpio_init(GPIOB, &gpio); }
   /* ---------- RX ---------- */
   gpio.gpio_mode = GPIO_MODE_INPUT;
   if (_usart == USART1) { gpio.gpio_pins = GPIO_PINS_10; gpio_init(GPIOA, &gpio); }
   if (_usart == USART2) { gpio.gpio_pins = GPIO_PINS_3; gpio_init(GPIOA, &gpio); }
   if (_usart == USART3) { gpio.gpio_pins = GPIO_PINS_11; gpio_init(GPIOB, &gpio); }
   if (_usart == UART4) { gpio.gpio_pins = GPIO_PINS_1; gpio_init(GPIOA, &gpio); }
+  if (_usart == UART5) { gpio.gpio_pins = GPIO_PINS_8; gpio_init(GPIOB, &gpio); }
+  if (_usart == UART7) { gpio.gpio_pins = GPIO_PINS_3; gpio_init(GPIOB, &gpio); }
 }
 
 /* ---------------- CLOCK INIT ---------------- */
@@ -148,21 +171,33 @@ void HardwareSerial::initClock(void)
     crm_periph_clock_enable(CRM_IOMUX_PERIPH_CLOCK, TRUE);
     gpio_pin_remap_config(UART4_GMUX_0010, TRUE);
   }
-  if (_dma_rx >= DMA2_CHANNEL3)
+  else if (_usart == UART5) {
+    crm_periph_clock_enable(CRM_UART5_PERIPH_CLOCK, TRUE);
+    crm_periph_clock_enable(CRM_IOMUX_PERIPH_CLOCK, TRUE);
+    gpio_pin_remap_config(UART5_GMUX_0001, TRUE);
+  }
+  else if (_usart == UART7) {
+    crm_periph_clock_enable(CRM_UART7_PERIPH_CLOCK, TRUE);
+    crm_periph_clock_enable(CRM_IOMUX_PERIPH_CLOCK, TRUE);
+    gpio_pin_remap_config(UART7_GMUX, TRUE);
+  }
+
+  // === GÜNCELLEME: DMA Saatlerini Garantiye Alın ===
+  // Eğer UART4, UART5 veya UART7 ise mutlaka DMA2 saatini de açın
+  if (_usart == UART4 || _usart == UART5 || _usart == UART7 || _dma_rx >= DMA2_CHANNEL3) {
     crm_periph_clock_enable(CRM_DMA2_PERIPH_CLOCK, TRUE);
-  else
-    crm_periph_clock_enable(CRM_DMA1_PERIPH_CLOCK, TRUE);
+  }
+  
+  // Her halükarda DMA1 saatini açık tutalım veya koşula bağlayalım
+  crm_periph_clock_enable(CRM_DMA1_PERIPH_CLOCK, TRUE);
 }
 
-/* ---------------- BEGIN ---------------- */
+
 void HardwareSerial::begin(uint32_t baud, SERIAL_Config_t config)
 {
-    
     initClock();
     initGpio();
 
-    //usart_init(_usart, baud, USART_DATA_8BITS, USART_STOP_1_BIT);
-    //usart_parity_selection_config(_usart, USART_PARITY_NONE);
     usart_init(_usart, baud, SERIAL_ConfigGrp[config].data_bit, SERIAL_ConfigGrp[config].stop_bit);
     usart_parity_selection_config(_usart, SERIAL_ConfigGrp[config].parity_selection);
     usart_transmitter_enable(_usart, TRUE);
@@ -184,7 +219,7 @@ void HardwareSerial::begin(uint32_t baud, SERIAL_Config_t config)
 
     dma_interrupt_enable(_dma_tx, DMA_FDT_INT, TRUE);
 
-    // → NVIC KESME ETKİNLEŞTİRME
+    // → NVIC KESME ETKİNLEŞTİRME (GÜNCELLENDİ)
     if (_usart == USART1)
         nvic_irq_enable(DMA1_Channel4_IRQn, 0, 0);
     else if (_usart == USART2)
@@ -193,7 +228,15 @@ void HardwareSerial::begin(uint32_t baud, SERIAL_Config_t config)
         nvic_irq_enable(DMA1_Channel2_IRQn, 0, 0);
     else if (_usart == UART4)
         nvic_irq_enable(DMA2_Channel4_5_IRQn, 0, 0);
-
+  
+    // UART5 TX -> DMA2_CHANNEL2 kullandığımız için:
+    else if (_usart == UART5)
+        nvic_irq_enable(DMA2_Channel2_IRQn, 0, 0); 
+  
+    // UART7 TX -> DMA2_CHANNEL5 kullandığımız için (UART4 ile ortak IRQ):
+    else if (_usart == UART7)
+        nvic_irq_enable(DMA2_Channel4_5_IRQn, 0, 0);
+  
     _tx_busy = false;
 
     // ==================== RX DMA (Circular) ====================
@@ -203,11 +246,11 @@ void HardwareSerial::begin(uint32_t baud, SERIAL_Config_t config)
     dma.memory_base_addr = (uint32_t)_buf;
     dma.memory_inc_enable = TRUE;
     dma.peripheral_base_addr = (uint32_t)&_usart->dt;
-    dma.loop_mode_enable = TRUE;          // Circular buffer
+    dma.loop_mode_enable = TRUE;          
     dma.priority = DMA_PRIORITY_HIGH;
     dma_init(_dma_rx, &dma);
 
-    // Flexible DMA mapping
+    // === GÜNCELLEME: Flexible DMA Mapping dizilimi ===
     if (_usart == USART1) {
         dma_flexible_config(DMA1, FLEX_CHANNEL5, DMA_FLEXIBLE_UART1_RX);
         dma_flexible_config(DMA1, FLEX_CHANNEL4, DMA_FLEXIBLE_UART1_TX);
@@ -224,10 +267,20 @@ void HardwareSerial::begin(uint32_t baud, SERIAL_Config_t config)
         dma_flexible_config(DMA2, FLEX_CHANNEL3, DMA_FLEXIBLE_UART4_RX);
         dma_flexible_config(DMA2, FLEX_CHANNEL5, DMA_FLEXIBLE_UART4_TX);
     }
+    // UART5 için esnek kanal atamaları
+    else if (_usart == UART5) {
+        dma_flexible_config(DMA2, FLEX_CHANNEL1, DMA_FLEXIBLE_UART5_RX);
+        dma_flexible_config(DMA2, FLEX_CHANNEL2, DMA_FLEXIBLE_UART5_TX);
+    }
+    // UART7 için esnek kanal atamaları
+    else if (_usart == UART7) {
+        dma_flexible_config(DMA2, FLEX_CHANNEL4, DMA_FLEXIBLE_UART7_RX);
+        dma_flexible_config(DMA2, FLEX_CHANNEL5, DMA_FLEXIBLE_UART7_TX);
+    }
 
-    dma_channel_enable(_dma_rx, TRUE);   // Sadece RX başlatılır
-    // TX burada başlatılmıyor → write() içinde başlatılacak
+    dma_channel_enable(_dma_rx, TRUE);   
 }
+
 
 /* ---------------- RING BUFFER ---------------- */
 int HardwareSerial::available() {
@@ -295,13 +348,34 @@ extern "C" void DMA1_Channel2_IRQHandler(void)  // USART3 TX - DMA1 CH2
     }
 }
 
-extern "C" void DMA2_Channel4_5_IRQHandler(void)  // UART4 TX - DMA2 CH5 (ortak IRQ)
+// extern "C" void DMA2_Channel4_5_IRQHandler(void)  // UART4 TX - DMA2 CH5 (ortak IRQ)
+// {
+//     if (dma_flag_get(DMA2_FDT5_FLAG) != RESET) {
+//         dma_flag_clear(DMA2_FDT5_FLAG);
+//         Serial4.onTxComplete();
+//     }
+    
+// }
+
+// === GÜNCELLEME: UART5 TX Kesmesi (DMA2 Kanal 2) ===
+extern "C" void DMA2_Channel2_IRQHandler(void)
 {
+    if (dma_flag_get(DMA2_FDT2_FLAG) != RESET) {
+        dma_flag_clear(DMA2_FDT2_FLAG);
+        Serial5.onTxComplete(); // UART5 nesne adınız farklıysa güncelleyin
+    }
+}
+
+// === GÜNCELLEME: UART4 ve UART7 Ortak TX Kesmesi (DMA2 Kanal 4 ve 5) ===
+extern "C" void DMA2_Channel4_5_IRQHandler(void)
+{
+    // UART4 TX kontrolü (Kanal 5)
     if (dma_flag_get(DMA2_FDT5_FLAG) != RESET) {
         dma_flag_clear(DMA2_FDT5_FLAG);
         Serial4.onTxComplete();
+        
+        // ÖNEMLİ: UART7 TX'i de DMA2_CHANNEL5'e atadığımız için, 
+        // tetiklenen nesnenin Serial7 olup olmadığını da kontrol etmeliyiz.
+        Serial7.onTxComplete(); 
     }
-    
-    // Eğer DMA2 CH4 de kullanıyorsanız, onu da temizleyebilirsiniz (opsiyonel):
-    // if (dma_flag_get(DMA2_FDT4_FLAG) != RESET) dma_flag_clear(DMA2_FDT4_FLAG);
 }
