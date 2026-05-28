@@ -75,4 +75,6 @@ extern HardwareSerial Serial1;   // global ya da extern olarak tanımlı olmalı
 extern HardwareSerial Serial2;
 extern HardwareSerial Serial3;
 extern HardwareSerial Serial4;
+extern HardwareSerial Serial5;
+extern HardwareSerial Serial7;
 #endif
