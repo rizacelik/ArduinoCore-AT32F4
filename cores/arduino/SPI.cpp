@@ -429,15 +429,7 @@ uint8_t SPIClass::recv(void)
 }
 
 
-
-//#if SPI_CLASS_1_ENABLE
-//SPIClass SPI(SPI_CLASS_1_SPI);
-//#endif
-
-//#if SPI_CLASS_2_ENABLE
-//SPIClass SPI_2(SPI_CLASS_2_SPI);
-//#endif
-
-//#if SPI_CLASS_3_ENABLE
-//SPIClass SPI_3(SPI_CLASS_3_SPI);
-//#endif
+// Example Aplication Class
+// SPIClass SPI(SPI1);
+// SPIClass SPI(SPI2);
+// SPIClass SPI(SPI3);
