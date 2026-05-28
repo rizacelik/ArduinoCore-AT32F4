@@ -97,6 +97,10 @@ void DShot::begin(uint8_t pin) {
 
     crm_periph_clock_enable(CRM_IOMUX_PERIPH_CLOCK, TRUE);
 
+    if (pin == PB4 || pin == PA15 || pin == PB3) {
+        gpio_pin_remap_config(SWJTAG_MUX_010, TRUE); 
+    }
+
     if(pin == PB4){
         gpio_pin_remap_config(TMR3_MUX_10, TRUE);
     }
@@ -213,13 +217,13 @@ void DShot::write(uint16_t throttle) {
 
     //throttle = constrain(throttle, 0, 2047);
     //throttle = map(throttle, 1000, 2000, 48, 2047);
-
-if (throttle <= 1000) {
-    throttle = 0;
-} else {
-    // PWM step * 2
-    throttle = ((throttle - 1000) * 2) + 46; 
-}
+    
+    if (throttle <= 1000) {
+        throttle = 0;
+    } else {
+        // PWM adım farkını 2 ile çarparak doğrudan DShot aralığına oturtur
+        throttle = ((throttle - 1000) * 2) + 46; 
+    }
 
 
     uint16_t packet = dshot_prepare_packet(throttle);
