@@ -73,16 +73,29 @@ void Servo::configure_pin(void) {
     if(PIN_MAP[pin].GPIOx == GPIOB){
         crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
     }
+
+    crm_periph_clock_enable(CRM_IOMUX_PERIPH_CLOCK, TRUE);
+
+    if (pin == PB4 || pin == PA15 || pin == PB3) {
+        gpio_pin_remap_config(SWJTAG_MUX_010, TRUE);
+    }
+
+    if (pin == PB4 || pin == PB5) {
+        gpio_pin_remap_config(TMR3_GMUX_0010, TRUE);
+    }
+
+    if (pin == PB10 || pin == PB11 || pin == PA15 || pin == PB3) {
+        gpio_pin_remap_config(TMR2_GMUX_11, TRUE);
+    }
+     
     
     // GPIO yapılandırması
     gpio_init_struct.gpio_pins = PIN_MAP[pin].GPIO_Pin_x;
     gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
     gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
-    gpio_init_struct.gpio_mode = GPIO_MODE_MUX;  // Alternatif fonksiyon modu
+    gpio_init_struct.gpio_mode = GPIO_MODE_MUX;  // Alternate function mode
     gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
     gpio_init(GPIOA, &gpio_init_struct);
-
-    //gpio_pin_remap_config(TMR3_GMUX_0010, TRUE);  // TMR3 CH1 için PA6
         
 }
 
