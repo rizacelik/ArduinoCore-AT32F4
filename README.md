@@ -1,4 +1,4 @@
-# ArduinoCore-AT32F4
+# ArduinoCore-AT32F403A
 
 # Arduino Core Support for WeAct Studio BlackPill (AT32F403ACGU7)
 
@@ -55,6 +55,17 @@ Simply downloading this core, running your existing Arduino projects on the Blac
 
 ## Using this core with the Arduino IDE
 
+### Entering DFU Mode on AT32F403A
+
+To put the **AT32F403A** into DFU (Device Firmware Upgrade) mode, follow these steps:
+
+1. Disconnect all power sources (including USB and any external batteries) from the board.
+2. Press and hold the **`BOOT0`** button on the board.
+3. While still holding the **`BOOT0`** button, connect the USB cable to your PC.
+4. Release the **`BOOT0`** button once the USB cable is connected.
+5. The device should now be recognized by your PC as **`AT32 Bootloader DFU`** (e.g., in Device Manager or Artery ISP Programmer).
+
+
 ## 🛠 Installation Guide
 
 1. Open your **Arduino IDE** (v2.0 or higher recommended).
@@ -90,7 +101,7 @@ If you need to install or update the drivers manually, visit the official [Arter
 
 ---
 
-# ArduinoCore-AT32F4
+# ArduinoCore-AT32F403A
 
 An Arduino Board Support Package (BSP) tailored for ArteryTek AT32F4 microcontrollers, specifically optimized for high-performance applications like flight controllers, motor control systems, and multi-sensor navigation units.
 
